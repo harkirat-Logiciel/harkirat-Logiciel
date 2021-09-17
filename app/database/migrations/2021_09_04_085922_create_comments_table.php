@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCommentsTable extends Migration {
 
@@ -14,6 +15,7 @@ class CreateCommentsTable extends Migration {
 	{
 		Schema::create('comments', function (Blueprint $table) {
             $table->bigIncrements('id');
+			$table->string('department_id');
             $table->string('parent_id')->nullable();
             $table->string('post_id');
             $table->string('user_id');
@@ -29,7 +31,7 @@ class CreateCommentsTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::dropIfExists('comments');
 	}
 
 }

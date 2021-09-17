@@ -1,18 +1,20 @@
 <?php
-
 // use Illuminate\Http\Response;
 use transformers\CommentTransformer;
 use Sorskod\Larasponse\Larasponse;
-use Post;
+// use Post;
+use Traits\SortableTrait;
+
 
 
 class commentcontroller extends BaseController {
+	
 	protected $response;
-
+    use SortableTrait;
     /**
      * ArticlesController constructor.
      */
-    public function __construct(Larasponse $response)
+    public function __construct(Larasponse $response )
     {
         $this->response = $response;	
 		if((Input::get('include')))
@@ -26,15 +28,17 @@ class commentcontroller extends BaseController {
 	 * @return Response
 	 */
 	public function index()
-    {
-	    $comment = Comment::whereNull('parent_id')->paginate();
-			if($comment)
-				{
-					$message =[
-						"data" =>$this->response->paginatedCollection($comment, new CommentTransformer ),
-						];
-				return Response::json($message,200);
-				}
+    {     
+		
+		
+		$add=Comment::query()->paginate();
+		$limit=10;
+		$query=$this->sort($add,$limit);
+			$message =[
+				"data" =>$this->response->paginatedCollection($query, new CommentTransformer ),
+				];
+			return Response::json($message,200);
+		
 	}	  
 		
 
@@ -87,7 +91,6 @@ class commentcontroller extends BaseController {
 									$add->parent_id = Input::get('parent_id');
 									
 							}
-					
 						$add->comment = Input::get('comment');
 						$add->save();
 						
@@ -166,6 +169,7 @@ class commentcontroller extends BaseController {
             "message" => "records not found"
           ], 404 );		
 	}
+	
 	/**
 	 * Remove the specified resource from storage.
 	 *

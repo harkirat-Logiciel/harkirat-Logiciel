@@ -3,7 +3,8 @@
 // use Illuminate\Http\Response;
 use transformers\PostTransformer;
 use Sorskod\Larasponse\Larasponse;
-// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
+use User;
 
 class postcontroller extends BaseController {
 	protected $response;
@@ -26,45 +27,30 @@ class postcontroller extends BaseController {
 	 */
 	public function index()
 	{    
-		$limit=Input::get('limit');
-
-		if( Input::get('user_id'))
-		{
-			$limit=Input::get('limit');
-			$user=Post::where('user_id',  Input::get('user_id'))->paginate($limit);
+		if($special=Input::get('favourites'))
+			{
+			$add=Post::where('is_favourites','LIKE' , "%$special%" )->get();
 			$message =[
-				"data" => $this->response->paginatedCollection($user, new PostTransformer),
-			];
+			   		"data" => $this->response->collection($add,	 new PostTransformer),
+				];
 			return Response::json($message,200);
-		} elseif(Input::get('title'))
-		{
-			$limit=Input::get('limit');
-			$title=Post::where('title','LIKE' , '%' . Input::get('title') . '%'  )->paginate($limit);
-			$message =[
-				"data" => $this->response->paginatedCollection($title, new PostTransformer),
-			];
-			
-			return Response::json($message,200);
-	    } 
-	
-		$username = Input::get('name');
-		if($username) 
-		{
-			$user = Post::leftJoin('users','posts.user_id', '=','users.id')
-			->whereIn('first_name',$username)
-			->get();
-			$message =[
-				"data" => $this->response->collection($user, new PostTransformer),
-			];
-			return Response::json($message,200);
-			
-	    }
-		$user=Post::paginate($limit);
-		$message =[
-			"data" => $this->response->paginatedCollection($user, new PostTransformer),
-		];
-		return Response::json($message,200);
-		
+			}
+		elseif(Input::get('favourites_by'))
+			{
+				$multi=Post::where ('user_id', Auth::id() )
+				->where('is_favourites','=',TRUE)->get();
+				$message =[
+						"data" => $this->response->collection($multi, new PostTransformer),
+						];
+				return Response::json($message,200);
+			}
+				$limit=Input::get('limit');
+				$user=Post::paginate($limit);
+				$message =[
+					"data"=>$this->response->paginatedCollection($user, new PostTransformer),
+				];
+				return Response::json($message,200);
+				
 	}
 	/**
 	 * Show the form for creating a new resource.
@@ -107,11 +93,35 @@ class postcontroller extends BaseController {
 		  return Response::json( $message,200);	
 		
 	}
+	public function favourites()
+    {
 		
-
-       
-
-
+		$add=Post::find(Input::get('post_id'));
+           if($add){
+			// $users=Auth::id();
+			// dd($users);
+		$status= Input::get('favourites');
+        if($status==0){		
+			$add->is_favourites= $status;
+			$add->marked_by=Auth::id();
+			$add->save();
+            return Response::json([
+                "message" => "Mark as Unfavourites"
+            ],200);
+        }
+        else if($status==1){
+			$add->is_favourites= $status;
+			$add->marked_by=Auth::user()->first_name;
+			$add->save();
+            return Response::json([
+                "message" => "Mark as Favourites"
+            ],200   );
+        }
+     	}
+		 return Response::json([
+			"message" => "invalid post id"
+		],200   );
+    }
 	/**
 	 * Display the specified resource.
 	 *
@@ -160,7 +170,7 @@ class postcontroller extends BaseController {
 			$user->title = Request::get('title');
 			$user->description = Request::get('description');
 			$user->update();
-		    $message = [
+		    $message =[
 			"message" =>"Record updated",
 			"Data"=> $this->response->item($user, new PostTransformer)
 			

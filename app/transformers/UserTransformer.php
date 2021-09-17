@@ -3,21 +3,34 @@ namespace transformers;
 use League\Fractal\TransformerAbstract;
 class UserTransformer extends TransformerAbstract
 {
-   
-    public function transform($users)
+    protected $availableIncludes = [
+        'profile','department'
+    ];
+    public function transform($data)
     {   
         return [
-            'id'  => $users->id,
-            'first_name'  =>  $users->first_name,
-            'last_name'  =>  $users->last_name,
-            'email'  => $users->email,
-            // 'email_verified_at' => $users->email_verified_at,
-            // 'active'  =>$users->active,
-            // 'password'  => $users->password,       
-            'created_at'  => $users->created_at->format('Y-m-d') . "." .$users->created_at->format('h:m:s'),
-            'updated_at'  => $users->updated_at->format('Y-m-d') . "." .$users->created_at->format('h:m:s'),
+            'id'  => $data->id,
+            'first_name'  =>  $data->first_name,
+            'last_name'  =>  $data->last_name,
+            'email'  => $data->email,
+            // 'email_verified_at' => $data->email_verified_at,
+            // 'active'  =>$data->active,
+            // 'password'  => $data->password,       
+            'created_at'  => $data->created_at->format('Y-m-d') . "." .$data->created_at->format('h:m:s'),
+            'updated_at'  => $data->updated_at->format('Y-m-d') . "." .$data->created_at->format('h:m:s'),
         ];
     }
     
-	
+    public function includeProfile($data)
+    {
+
+        $user = $data->profile;
+        return $this->item($user, new UserProfileTransformer);
+    }
+    public function includeDepartment($data)
+    {
+
+        $user = $data->depart;
+        return $this->collection($user, new DepartmentTransformer);
+    }
 }

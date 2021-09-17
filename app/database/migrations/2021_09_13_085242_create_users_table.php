@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration {
 	public function up()
 	{
 		Schema::create('users', function (Blueprint $table) {
-			$table->bigincrements('id');
+			$table->bigincrements('id'); 
 			$table->string('first_name');
 			$table->string('last_name');
 			$table->string('email')->unique();
@@ -23,8 +23,8 @@ class CreateUsersTable extends Migration {
 			$table->rememberToken();
 			$table->timestamps();
 		});
-	
 	}
+
 	/**
 	 * Reverse the migrations.
 	 *

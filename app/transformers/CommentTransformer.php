@@ -5,9 +5,7 @@ use League\Fractal\TransformerAbstract;
 
 class CommentTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = [
-        'post','users','reply'
-    ];
+    protected $availableIncludes=['post','users','reply'];
     public function transform($user)
     
     {
@@ -15,8 +13,8 @@ class CommentTransformer extends TransformerAbstract
  
         return [
             'id'  => $user->id,
-            // 'post_id'  => $user->post_id,
-            // 'parent_id'  => $user->parent_id,
+            'post_id'  => $user->post_id,
+            'parent_id'  => $user->parent_id,
             'comment'  =>$user->comment,    
             'created_at'  => $user->created_at->format('Y-m-d') . "." .$user->created_at->format('h:m:s'),
             'updated_at'  => $user->updated_at->format('Y-m-d') . "." .$user->created_at->format('h:m:s'),

@@ -2,7 +2,7 @@
 namespace app\services;
 
 
-use Config;
+
 use DB;
 use Carbon\Carbon;
 

@@ -4,30 +4,42 @@ use League\Fractal\TransformerAbstract;
 class PostTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
-        'comment','users'
+        'comment','users','favourites'
     ];
-    public function transform($users)
+    public function transform($posts)
     {   
         return [
-            'id'  => $users->id,
-            // 'user_id'  =>  $users->user_id,
-            'title'  =>  $users->title,
-            'description'  => $users->description,    
-            'created_at'  => $users->created_at->format('Y-m-d') . "." .$users->created_at->format('h:m:s'),
-            'updated_at'  => $users->updated_at->format('Y-m-d') . "." .$users->created_at->format('h:m:s'),
+            'id'  => $posts->id,
+            // 'user_id'  =>  $posts->user_id,
+            'title'  =>  $posts->title,
+            'marked_by' => $posts->marked_by,
+            'description'  => $posts->description,    
+            'created_at'  => $posts->created_at->format('Y-m-d') . "." .$posts->created_at->format('h:m:s'),
+            'updated_at'  => $posts->updated_at->format('Y-m-d') . "." .$posts->created_at->format('h:m:s'),
         ];
     }
-    public function includeComment($users)
+    public function includeComment($posts)
     {
-        $comment = $users->comment;
+        $comment = $posts->comment;
         //  dd($comment);
         return $this->collection($comment, new CommentTransformer);
     }
-    public function includeUsers($users)
+    public function includeUsers($posts)
     {
-        $user = $users->users;
+        $user = $posts->users;
         
         return $this->item($user, new UserTransformer);
     }
-	
+    public function includeFavourites($posts)
+    {
+        $data = $posts->favourites;
+        if($data) {
+            return $this->item($data,function($data) {
+                return [
+                    'id'=> $data->id,
+                    'first_name'=> $data->first_name,
+                ];
+        });
+        }
+    }
 }

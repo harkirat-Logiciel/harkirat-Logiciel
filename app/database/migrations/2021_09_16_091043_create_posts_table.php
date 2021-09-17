@@ -17,9 +17,11 @@ class CreatePostsTable extends Migration {
             $table->string('user_id');
             $table->text('title');
             $table->text('description');
+			$table->boolean('is_favourites');
+			$table->boolean('marked_by');
             $table->timestamps();
-		});	}
-
+		});
+	}
 
 	/**
 	 * Reverse the migrations.

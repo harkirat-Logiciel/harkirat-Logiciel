@@ -22,7 +22,10 @@
 			"app/database/seeds",
 			"app/tests/TestCase.php",
 			"app/transformers",
-			"app/services"
+			"app/services",
+			"app/blog/userprofile",
+			"app/blog/Repositories",
+			"app/blog/Traits"
 		]
 	},
 	"scripts": {

@@ -7,6 +7,7 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 
 
 
+
 class User extends Eloquent implements UserInterface, RemindableInterface
 {
 
@@ -45,5 +46,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     {
 		return $this->hasMany(Comment::class,'user_id', 'id');
     }
+	public function profile()
+    {
+		return $this->hasOne(UserProfile::class,'user_id','id');
+    }
+	public function depart()
+    {
+		return $this->belongsToMany(Department::class,'user_department','user_id','department_id');
+    }
+
 }
 

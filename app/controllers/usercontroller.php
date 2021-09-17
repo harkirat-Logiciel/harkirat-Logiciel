@@ -5,7 +5,8 @@ use transformers\UserTransformer;
 use Sorskod\Larasponse\Larasponse;
 use LucaDegasperi\OAuth2Server\Authorizer;
 use app\services\AuthenticationService;
-
+use User;
+// use Illuminate\Database\Query\Builder;
 
 
 class usercontroller extends \BaseController {
@@ -29,14 +30,18 @@ class usercontroller extends \BaseController {
 		$this->response->parseIncludes(Input::get('include'));
 		}	
     }
+	
+
+
 	public function index()
 	{
-		$limit=Input::get('limit');	
-		$title=User::where('first_name' , 'LIKE' , '%' . Input::get('first_name') . '%'  )->paginate($limit);
+		$limit=Input::get('limit');
+		$title=User::where('first_name','like' ,'%' . Input::get('first_name'). '%' )->paginate($limit);		
 		$message =[
-			"data" => $this->response->paginatedCollection($title, new UserTransformer),
+			"data" => $this->response->PaginatedCollection($title, new UserTransformer),
 		];
 		return Response::json($message,200);
+		
 	}
 
 
@@ -213,5 +218,15 @@ class usercontroller extends \BaseController {
           ], 404 );	
     }
 
-
+	public function assign()
+	{
+		$userid=Input::get('user_id');
+		$assignuser= User::find($userid);
+		$departId=Input::get('department_id');
+        $assignuser->depart()->sync($departId);
+        return Response::json([
+            "message" => "records inserted successfully"
+          ], 200 );	
+		
+	}
 }
