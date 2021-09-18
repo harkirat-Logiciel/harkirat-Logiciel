@@ -24,7 +24,7 @@ Route::get('/', function()
       //                user login             //
 Route::post('/user/','usercontroller@store');
 Route::put('assigndepartment/','usercontroller@assign');
-Route::post('status/','usercontroller@status');
+Route::put('status/','usercontroller@status');
 Route::get('/user/','usercontroller@index');
 Route::delete('user/{id}','usercontroller@destroy');
 Route::get('user/{id}','usercontroller@show');
@@ -33,8 +33,9 @@ Route::post('login/','usercontroller@login');
 Route::post('userprofile/','usercontroller@status');
 
 
-    //             posts                     //
 Route::group(['before' => 'oauth'], function()
+
+       //                Post               //
     {
         Route::post('post/','postcontroller@store');
         Route::get('post/','postcontroller@index');
@@ -43,6 +44,7 @@ Route::group(['before' => 'oauth'], function()
         Route::put('post/{id}','postcontroller@update');
         Route::post('postfav/','postcontroller@favourites');
 
+       //                Comment               //
 
 
         Route::post('/comment/','commentcontroller@store');
@@ -52,6 +54,7 @@ Route::group(['before' => 'oauth'], function()
         Route::put('comment/{id}','commentcontroller@update');
 
 
+       //                user fileUpload               //
 
 
         Route::post('uploadProfile/','userprofilecontroller@create');

@@ -52,26 +52,20 @@ class usercontroller extends \BaseController {
 	 */
 	public function status()
     {
-        $rules=[
-            'active'=> 'required',
-        ];
-        $validation=Validator::make(Input::all(),$rules);
-        if($validation->fails()){
-            return Response::json($validation->errors(),412);
-        }
+		$users=User::find(Input::get('user_id'));
+		if ($users)
+		{
         $status = Input::get('active');
-        // $add=new User;
-        // $add->is_active = Request::get('is_active');
-        // $add->save();
         if($status==0){
-			$user=[
-				"message" => "inactive"
-			];
+			$users->active=$status;
+			$users->save();
             return Response::json([
                 "message" => "inactive"
             ],200  );
         }
         else if($status==1){
+			$users->active=$status;
+			$users->save();
             return Response::json([
                 "message" => "active"
             ],200   );
@@ -81,6 +75,7 @@ class usercontroller extends \BaseController {
                 "message" => "please enter valid boolean number"
             ],404   );
         }
+	    }
     }
 
 	/**

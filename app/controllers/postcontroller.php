@@ -111,7 +111,7 @@ class postcontroller extends BaseController {
         }
         else if($status==1){
 			$add->is_favourites= $status;
-			$add->marked_by=Auth::user()->first_name;
+			$add->marked_by=Auth::id();
 			$add->save();
             return Response::json([
                 "message" => "Mark as Favourites"
