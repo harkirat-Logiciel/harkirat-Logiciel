@@ -32,9 +32,9 @@ class Comment extends Eloquent implements UserInterface, RemindableInterface {
 			return $this->belongsTo('User','user_id','id');	
 		}
 	public function replies(){
-			return $this->hasMany('Comment','parent_id');
+			return $this->hasMany(Comment::class,'parent_id');
 		}
 	public function reply(){
-			return $this->belongsTo(Comment::class);
+			return $this->belongsTo(Comment::class,'parent_id');
 		}
 }

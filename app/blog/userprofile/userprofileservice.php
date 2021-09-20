@@ -22,7 +22,7 @@ class userprofileservice {
             $name = "User_pic";
             $extension = $file->getClientOriginalExtension();
             $fileName = $name.Auth::id().'.'.$extension;
-			$destinationPath=public_path().'/user_profile/';
+			$destinationPath=public_path('/user_profile/');
             $file->move($destinationPath , $fileName);
 			$url ='user_profile/' . $fileName;
             $image = $this->repo->save($url);

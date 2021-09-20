@@ -4,7 +4,7 @@
 use transformers\PostTransformer;
 use Sorskod\Larasponse\Larasponse;
 use Illuminate\Support\Facades\Auth;
-use User;
+// use User;
 
 class postcontroller extends BaseController {
 	protected $response;

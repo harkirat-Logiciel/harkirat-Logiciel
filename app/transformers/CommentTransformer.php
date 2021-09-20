@@ -6,24 +6,24 @@ use League\Fractal\TransformerAbstract;
 class CommentTransformer extends TransformerAbstract
 {
     protected $availableIncludes=['post','users','reply'];
-    public function transform($user)
+    public function transform($comment)
     
     {
         // return $users;
  
         return [
-            'id'  => $user->id,
-            'post_id'  => $user->post_id,
-            'parent_id'  => $user->parent_id,
-            'comment'  =>$user->comment,    
-            'created_at'  => $user->created_at->format('Y-m-d') . "." .$user->created_at->format('h:m:s'),
-            'updated_at'  => $user->updated_at->format('Y-m-d') . "." .$user->created_at->format('h:m:s'),
+            'id'  => $comment->id,
+            'post_id'  => $comment->post_id,
+            'parent_id'  => $comment->parent_id,
+            'comment'  =>$comment->comment,    
+            'created_at'  => $comment->created_at->format('Y-m-d') . "." .$comment->created_at->format('h:m:s'),
+            'updated_at'  => $comment->updated_at->format('Y-m-d') . "." .$comment->created_at->format('h:m:s'),
          
         ];
     }
-    public function includePost($user)
+    public function includePost($comment)
     {
-        $post = $user->post;
+        $post = $comment->post;
         // dd($post);
         if ($post)
         {
@@ -31,16 +31,16 @@ class CommentTransformer extends TransformerAbstract
         }
        
     }
-    public function includeUsers($users)
+    public function includeUsers($comment)
     {
-        $user = $users->users;
+        $users = $comment->users;
         
-        return $this->item($user, new UserTransformer);
+        return $this->item($users, new UserTransformer);
     }
-    public function includeReply($users)
+    public function includeReply($comment)
     {
-        $reply = $users->replies;
-        
+        $reply = $comment->replies;
+
         return $this->collection($reply, new CommentTransformer);
     }
 }

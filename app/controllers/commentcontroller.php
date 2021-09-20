@@ -31,11 +31,11 @@ class commentcontroller extends BaseController {
     {     
 		
 		
-		$add=Comment::query()->paginate();
+		$add=Comment::query()->whereNull('parent_id');
 		$limit=10;
 		$query=$this->sort($add,$limit);
 			$message =[
-				"data" =>$this->response->paginatedCollection($query, new CommentTransformer ),
+				"data" =>$this->response->paginatedCollection($query->paginate(), new CommentTransformer ),
 				];
 			return Response::json($message,200);
 		
@@ -62,12 +62,6 @@ class commentcontroller extends BaseController {
 
 	public function store()
 		{
-			/*     validation       */
-			// $post=Post::where('id','=', Input::get('post_id'))->first('id');
-			// dd($post);
-			// $check=Post::find($post);
-			// if($check)
-			// {
 				$rules=[
 					'post_id'=> 'required',
 					'comment'=> 'required|max:200' 
@@ -79,7 +73,8 @@ class commentcontroller extends BaseController {
 						$add=new Comment;
 						$add->user_id=Auth::id();
 						$add->post_id = Input::get('post_id');
-							if($comment=Comment::where('id','=', Input::get('parent_id'))->first())
+						$comment=Comment::where('id','=', Input::get('parent_id'))->first();
+							if($comment)
 							{
 								if( $firstReply=$comment->reply)
 								{
@@ -99,11 +94,6 @@ class commentcontroller extends BaseController {
 							"Data" => $this->response->item($add, new CommentTransformer)
 						];
 						return Response::json( $message,200);
-			// }
-			// $message = [
-			// 	"message"=> "Invalid Post",
-			// ];
-			// return Response::json( $message,404);
 		}
 	/**
 	 * Display the specified resource.

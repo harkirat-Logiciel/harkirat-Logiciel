@@ -13,7 +13,7 @@ class UserProfileTransformer extends TransformerAbstract
  
         return [
             'id'  => $user->id,
-            'profile'  =>\URL::asset($user->profile),    
+            'profile'  =>\URL::asset($user->profile->profile),    
             'user_id'  =>$user->user_id,    
             'created_at'  => $user->created_at->format('Y-m-d') . "." .$user->created_at->format('h:m:s'),
             'updated_at'  => $user->updated_at->format('Y-m-d') . "." .$user->created_at->format('h:m:s'),
