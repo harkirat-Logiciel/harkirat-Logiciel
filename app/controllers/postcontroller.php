@@ -1,10 +1,12 @@
 <?php
 
-// use Illuminate\Http\Response;
+
 use transformers\PostTransformer;
+use transformers\ExcelTransformer;
 use Sorskod\Larasponse\Larasponse;
 use Illuminate\Support\Facades\Auth;
-// use User;
+use Maatwebsite\Excel\Facades\Excel;
+use Post;
 
 class postcontroller extends BaseController {
 	protected $response;
@@ -142,9 +144,18 @@ class postcontroller extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function excel()
 	{
-       //
+		$post=Post::all();
+		$message = $this->response->collection($post, new ExcelTransformer);
+		 Excel::create('post', function($excel) use($message)  {
+
+			$excel->sheet('myexcel', function($sheet) use($message){
+		
+				$sheet->fromArray(reset($message));
+			});
+		
+		})->export('xls');
 	}
               
 

@@ -124,6 +124,8 @@ return array(
 		'Sorskod\Larasponse\LarasponseServiceProvider',
 		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+		'Davelip\Queue\DatabaseServiceProvider',
+		'Maatwebsite\Excel\ExcelServiceProvider',
 	),
 
 	/*
@@ -191,8 +193,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
-		
-
+		'Excel'           => 'Maatwebsite\Excel\Facades\Excel',
 	),
 
 );

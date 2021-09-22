@@ -10,8 +10,8 @@
 		"tappleby/laravel-auth-token": "0.3.*",
 		"lucadegasperi/oauth2-server-laravel": "^3.0",
 		"hybridauth/hybridauth": "3.0.0",
-		"kylekatarnls/laravel-carbon-2": "^1.0.0",
-		"nesbot/carbon": "2.0.0-beta.2 as 1.25.0"
+		"maatwebsite/excel": "~1.3",
+		"davelip/laravel-database-queue": ">0.5"
 	},
 	"autoload": {
 		"classmap": [
