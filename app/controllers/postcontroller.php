@@ -6,7 +6,8 @@ use transformers\ExcelTransformer;
 use Sorskod\Larasponse\Larasponse;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-use Post;
+// use Post;
+use DB;
 
 class postcontroller extends BaseController {
 	protected $response;
@@ -215,7 +216,44 @@ class postcontroller extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	
 
+	public function excelpost()
+	{
+			    $path =Input::file('data')->getRealPath();
+			
+				// dd($file);
+				$data = Excel::load($path)->get();
+	            
+			if($data->count() > 0)
+			{
+			 foreach($data->toArray() as $row)
+			 {
+			   $insert_data[] = array(
+				'User_name'  => $row['users->user_id'],
+				'User_name'   => $row['title'],
+				'Marked_by_User'   => $row['usersmarked->user_id'],
+				'Description'    => $row['description'],
+			   );
+			 }
+			 dd($insert_data);
+	   
+			 if(!empty($insert_data))
+			 {
+			  DB::table('posts')->insert($insert_data);
+			 }
+			}
 
+			// Excel::load(Input::file('file'), function ($reader) {
+
+            //     foreach ($reader->toArray() as $row) {
+			// 		dd($row);
+            //         User::firstOrCreate($row);
+            //     }
+            // });
+			// return back()->with('success', 'Excel Data Imported successfully.');
+		
+		
+	 }
+	   
 }
+

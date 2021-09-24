@@ -43,7 +43,9 @@ Route::group(['before' => 'oauth'], function()
         Route::get('post/{id}','postcontroller@show');
         Route::put('post/{id}','postcontroller@update');
         Route::post('postfav/','postcontroller@favourites');
-        Route::get('postexcel/','postcontroller@excel');
+        Route::get('exportexcel/','postcontroller@excel');
+        Route::post('importexcel/','postcontroller@excelpost');
+
 
        //                Comment               //
 
