@@ -6,8 +6,9 @@ use transformers\ExcelTransformer;
 use Sorskod\Larasponse\Larasponse;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-// use Post;
-use DB;
+use Illuminate\Support\Facades\Input;
+use User;
+// use DB;
 
 class postcontroller extends BaseController {
 	protected $response;
@@ -172,13 +173,9 @@ class postcontroller extends BaseController {
 	if ($user){
 	$rules=[
 		'title' => 'required|max:20|unique:posts,title' . ($id ? ",$id": ''),
-		'description' => 'required|max:200',
+		'description' => 'required|max:200',			
 	];
-	$validation=Validator::make(Input::all(),$rules);
-	if($validation->fails())                                
-	{
-		return Response::json($validation->errors(),404);
-	}
+
 			$user->title = Request::get('title');
 			$user->description = Request::get('description');
 			$user->update();
@@ -219,28 +216,38 @@ class postcontroller extends BaseController {
 
 	public function excelpost()
 	{
-			    $path =Input::file('data')->getRealPath();
-			
-				// dd($file);
-				$data = Excel::load($path)->get();
-	            
+		$insert_data = [];
+			$path =Input::file('data')->getRealPath();
+			$data = Excel::load($path)->get();
+
+	            // dd($data);
 			if($data->count() > 0)
 			{
-			 foreach($data->toArray() as $row)
+			 foreach($data->toArray() as $row )
 			 {
-			   $insert_data[] = array(
-				'User_name'  => $row['users->user_id'],
-				'User_name'   => $row['title'],
-				'Marked_by_User'   => $row['usersmarked->user_id'],
-				'Description'    => $row['description'],
-			   );
+				$title=Post::where('title',$row['title'])->first();
+				 if($title)
+				 {
+					 continue;	
+				 }	 
+				$userid=User::where('first_name', $row['user_name'] )->first()->id;
+				$userfav=User::where('first_name', $row['marked_by_user'] )->first()->id;
+			   	$insert_data[]= [
+				'User_id'  => $userid,
+				'Title'   => $row['title'],
+				'Marked_by'   => $userfav,
+				'Description'    => $row['description']
+			   ];
+			//    dd( $insert_data);
 			 }
-			 dd($insert_data);
-	   
 			 if(!empty($insert_data))
 			 {
-			  DB::table('posts')->insert($insert_data);
+			  DB::table('posts')->insert($insert_data, new ExcelTransformer);
+			  return "success:-Insert Record successfully.";
 			 }
+			 return Response::json([
+				"message" => "records not inserted"
+			  ], 501 );	
 			}
 
 			// Excel::load(Input::file('file'), function ($reader) {
