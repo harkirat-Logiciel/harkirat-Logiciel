@@ -249,17 +249,6 @@ class postcontroller extends BaseController {
 				"message" => "records not inserted"
 			  ], 501 );	
 			}
-
-			// Excel::load(Input::file('file'), function ($reader) {
-
-            //     foreach ($reader->toArray() as $row) {
-			// 		dd($row);
-            //         User::firstOrCreate($row);
-            //     }
-            // });
-			// return back()->with('success', 'Excel Data Imported successfully.');
-		
-		
 	 }
 	   
 }
