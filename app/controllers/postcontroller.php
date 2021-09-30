@@ -175,7 +175,10 @@ class postcontroller extends BaseController {
 		'title' => 'required|max:20|unique:posts,title' . ($id ? ",$id": ''),
 		'description' => 'required|max:200',			
 	];
-
+	$validation=Validator::make(Input::all(),$rules);
+	if($validation->fails()){
+		return Response::json($validation->errors(),412);
+	}
 			$user->title = Request::get('title');
 			$user->description = Request::get('description');
 			$user->update();
@@ -216,6 +219,13 @@ class postcontroller extends BaseController {
 
 	public function excelpost()
 	{
+		$rules=[
+			'data' => 'required',			
+		];
+		$validation=Validator::make(Input::all(),$rules);
+		if($validation->fails()){
+			return Response::json($validation->errors(),412);
+		}
 		$insert_data = [];
 			$path =Input::file('data')->getRealPath();
 			$data = Excel::load($path)->get();
