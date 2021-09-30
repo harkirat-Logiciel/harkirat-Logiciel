@@ -13,8 +13,8 @@ class ExcelTransformer extends TransformerAbstract
             'Title'  =>  $posts->title,
             'Marked_by_User' => $posts->usersmarked->first_name,
             'Description'  => $posts->description, 
-            'created_at'  => $posts->created_at->format('Y-m-d') . "." .$posts->created_at->format('h:m:s'),
-            'updated_at'  => $posts->updated_at->format('Y-m-d') . "." .$posts->created_at->format('h:m:s'),  
+            // 'created_at'  => $posts->created_at->format('Y-m-d') . "." .$posts->created_at->format('h:m:s'),
+            // 'updated_at'  => $posts->updated_at->format('Y-m-d') . "." .$posts->created_at->format('h:m:s'),  
         ];   
     }
 }

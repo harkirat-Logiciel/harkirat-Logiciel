@@ -233,46 +233,46 @@ class postcontroller extends BaseController {
 			{
 			 foreach($data->toArray() as $row )
 			 {
-				$userid=User::where('first_name', $row['user_name'] )->first()->id;
+				$userid=User::where('first_name', $row['user_name'])->first()->id;
 				$userfav=User::where('first_name', $row['marked_by_user'] )->first()->id;
 				$post=Post::where('title',$row['title'])->first();
 				if($post) 
 				{
 				   $postId=$post->id;
-				 if($postId)
-				 {
-					$update_data= [
-						'User_id'  => $userid,
-						'Marked_by'   => $userfav,
-						'Description'    => $row['description'],
-						'created_at'     => Carbon\Carbon::now(),
-						'updated_at'     => Carbon\Carbon::now()
-					   ];
-					   DB::table('posts')->where('id',$postId)->update($update_data);
-				  }		
+						if($postId)
+						{
+							$update_data= [
+								'User_id'  		=> $userid,
+								'Marked_by' 	=> $userfav,
+								'Description'   => $row['description'],
+								'created_at'    => Carbon\Carbon::now(),
+								'updated_at'    => Carbon\Carbon::now()
+							];
+							DB::table('posts')->where('id',$postId)->update($update_data);
+						}		
 				} else{
-					$insert_data[]= [
-						'User_id'  => $userid,
-						'Title'   => $row['title'],
-						'Marked_by'   => $userfav,
-						'Description'    => $row['description'],
-						'created_at'     => Carbon\Carbon::now(),
-						'updated_at'     => Carbon\Carbon::now()
-					   ];
-				}
+						$insert_data[]= [
+							'User_id'  		=> $userid,
+							'Title'  		=> $row['title'],
+							'Marked_by'   	=> $userfav,
+							'Description'   => $row['description'],
+							'created_at'    => Carbon\Carbon::now(),
+							'updated_at'    => Carbon\Carbon::now()
+						];
+					}
 			 }
 			 if(!empty($insert_data))
-			 {
-			  DB::table('posts')->insert($insert_data, new ExcelTransformer);
-			  return Response::json([
-				"message" => "records inserted"
-			  ], 200 );	
-			 }
+				{
+					DB::table('posts')->insert($insert_data, new ExcelTransformer);
+					return Response::json([
+						"message" => "records inserted"
+					], 200 );	
+				}
 			 return Response::json([
 				"message" => "records updated"
 			  ], 200);	
 			}
-	 }
+	}
 	   
 }
 
