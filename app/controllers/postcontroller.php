@@ -219,35 +219,48 @@ class postcontroller extends BaseController {
 		$insert_data = [];
 			$path =Input::file('data')->getRealPath();
 			$data = Excel::load($path)->get();
-
-	            // dd($data);
-			if($data->count() > 0)
+			if(!empty($data) && $data->count() > 0)
 			{
 			 foreach($data->toArray() as $row )
 			 {
-				$title=Post::where('title',$row['title'])->first();
-				 if($title)
-				 {
-					 continue;	
-				 }	 
 				$userid=User::where('first_name', $row['user_name'] )->first()->id;
 				$userfav=User::where('first_name', $row['marked_by_user'] )->first()->id;
-			   	$insert_data[]= [
-				'User_id'  => $userid,
-				'Title'   => $row['title'],
-				'Marked_by'   => $userfav,
-				'Description'    => $row['description']
-			   ];
-			//    dd( $insert_data);
+				$post=Post::where('title',$row['title'])->first();
+				if($post) 
+				{
+				   $postId=$post->id;
+				 if($postId)
+				 {
+					$update_data= [
+						'User_id'  => $userid,
+						'Marked_by'   => $userfav,
+						'Description'    => $row['description'],
+						'created_at'     => Carbon\Carbon::now(),
+						'updated_at'     => Carbon\Carbon::now()
+					   ];
+					   DB::table('posts')->where('id',$postId)->update($update_data);
+				  }		
+				} else{
+					$insert_data[]= [
+						'User_id'  => $userid,
+						'Title'   => $row['title'],
+						'Marked_by'   => $userfav,
+						'Description'    => $row['description'],
+						'created_at'     => Carbon\Carbon::now(),
+						'updated_at'     => Carbon\Carbon::now()
+					   ];
+				}
 			 }
 			 if(!empty($insert_data))
 			 {
 			  DB::table('posts')->insert($insert_data, new ExcelTransformer);
-			  return "success:-Insert Record successfully.";
+			  return Response::json([
+				"message" => "records inserted"
+			  ], 200 );	
 			 }
 			 return Response::json([
-				"message" => "records not inserted"
-			  ], 501 );	
+				"message" => "records updated"
+			  ], 200);	
 			}
 	 }
 	   
