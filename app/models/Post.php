@@ -26,10 +26,14 @@ class Post extends Eloquent implements UserInterface, RemindableInterface {
 	'description'=>'required'];
 	
 	
-	public function comment()
+	public function delcomment()
    		{
-			return $this->hasMany(Comment::class);
+			return $this->hasMany(Comment::class,'post_id','id');
 		}
+		public function comment()
+		{
+		 return $this->hasMany(Comment::class);
+		 }
 	public function comments()
 		{
 		 return $this->hasMany(Comment::class,'id')->whereNull('parent_id');

@@ -200,12 +200,14 @@ class postcontroller extends BaseController {
 		
         $user=Post::find($id);
 		if($user){
-		$user->delete();
-		return Response::json([
-            "message" => "records deleted successfully"
-          ], 200 );	
-		}
-
+			$user->delete();
+			foreach($user->delcomment as $subcategory){
+				$subcategory->delete(); 
+			}
+				return Response::json([				
+					"message"=> "Recored Deleted successfully"
+			], 200 );	
+		} 
 		return Response::json([
             "message" => "records not found"
           ], 404 );	
@@ -226,7 +228,6 @@ class postcontroller extends BaseController {
 		if($validation->fails()){
 			return Response::json($validation->errors(),412);
 		}
-		$insert_data = [];
 			$path =Input::file('data')->getRealPath();
 			$data = Excel::load($path)->get();
 			if(!empty($data) && $data->count() > 0)
@@ -250,7 +251,8 @@ class postcontroller extends BaseController {
 							];
 							DB::table('posts')->where('id',$postId)->update($update_data);
 						}		
-				} else{
+				}else
+				    {
 						$insert_data[]= [
 							'User_id'  		=> $userid,
 							'Title'  		=> $row['title'],
@@ -263,7 +265,7 @@ class postcontroller extends BaseController {
 			 }
 			 if(!empty($insert_data))
 				{
-					DB::table('posts')->insert($insert_data, new ExcelTransformer);
+					DB::table('posts')->insert($insert_data);
 					return Response::json([
 						"message" => "records inserted"
 					], 200 );	
@@ -272,7 +274,6 @@ class postcontroller extends BaseController {
 				"message" => "records updated"
 			  ], 200);	
 			}
-	}
-	   
+	}	   
 }
 
