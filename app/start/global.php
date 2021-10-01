@@ -49,6 +49,40 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+	$message = $exception->getMessage();
+	$line=$exception->getLine();
+	     
+
+    // switch statements provided in case you need to add
+    // additional logic for specific error code.
+    switch ($code) {
+        case 401:
+            $message            = (!$message ? $message = 'you are unauthorized to view this' : $message);
+            return Response::json(array(
+                    'code'      =>  401,
+                    'message'   =>  $message ." |on line number " .$line
+                ), 401);
+        case 404:
+            $message            = (!$message ? $message = 'the requested resource was not found' : $message);
+            return Response::json(array(
+                    'code'      =>  404,
+                    'message'   =>  $message ." |on line number " .$line
+                ), 404);  
+        case 405:
+            $message            = (!$message ? $message = 'the method is not allowed' : $message);
+            return Response::json(array(
+                    'code'      =>  405,
+                    'message'   =>  $message ." |on line number " .$line
+                ), 405); 
+        case 500:
+            $message            = (!$message ? $message = 'internal server error' : $message);
+            return Response::json(array(
+                    'code'      =>  500,
+                    'message'   =>   $message . " |on line number " .$line
+                  
+                ), 500);           
+    }
+
 });
 
 /*

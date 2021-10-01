@@ -7,7 +7,6 @@ use Sorskod\Larasponse\Larasponse;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Input;
-use User;
 // use DB;
 
 class postcontroller extends BaseController {
@@ -237,7 +236,7 @@ class postcontroller extends BaseController {
 				$userid=User::where('first_name', $row['user_name'])->first()->id;
 				$userfav=User::where('first_name', $row['marked_by_user'] )->first()->id;
 				$post=Post::where('title',$row['title'])->first();
-				if($post) 
+				if($post)
 				{
 				   $postId=$post->id;
 						if($postId)
